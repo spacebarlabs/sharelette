@@ -187,7 +187,7 @@
         .discord { background-color: #5865F2; }
         .email { background-color: #7d7d7d; }
         .sms { background-color: #4CAF50; }
-        .pocket { background-color: #EF3F56; }
+
         .instapaper { background-color: #1f1f1f; }
         .wallabag { background-color: #333; }
         .raindrop { background-color: #3B4E70; }
@@ -401,7 +401,7 @@
             </div>
             <p class="coupon-code">
                 <button id="hide-coupon-btn" class="close-btn" aria-label="Hide coupon">&times;</button>
-                With Pocket shutting down, try our managed hosting for 
+                Try our managed hosting for 
                 <a href="https://cloudbreak.app/wallabag?utm_source=sharelette&utm_medium=webapp&utm_campaign=wallabag_promo&rby=sharelette" target="_blank" rel="noopener">Wallabag, a read-it-later app</a>! 
                 Use code <strong>SHARELETTE</strong> for $2 USD off.
             </p>
@@ -453,17 +453,10 @@
 
         <h3>Save for Later</h3>
         <div class="action-links">
-            <a href="#" id="pocket-save" class="action-item pocket" target="_blank">Pocket</a>
             <a href="#" id="instapaper-save" class="action-item instapaper" target="_blank">Instapaper</a>
             <a href="#" id="wallabag-save" class="action-item wallabag" target="_blank">Wallabag</a>
             <a href="#" id="raindrop-save" class="action-item raindrop" target="_blank">Raindrop.io</a>
             <a href="#" id="feedbin-save" class="action-item feedbin" target="_blank">Feedbin</a>
-        </div>
-
-        <div class="callout-warning">
-            <button id="hide-pocket-warning-btn" class="close-btn" aria-label="Hide Pocket warning">&times;</button>
-            <strong>Pocket is shutting down on July 8th, 2025.</strong>
-            You can export your data and find alternatives at <a href="https://getoffpocket.com?utm_source=sharelette&utm_medium=webapp&utm_campaign=pocket_shutdown_info" target="_blank" rel="noopener">getoffpocket.com</a>.
         </div>
 
         <h3>Customization</h3>
@@ -724,7 +717,7 @@
             visibleShareButtons: [
                 'facebook-share', 'twitter-share', 'bluesky-share', 'linkedin-share', 
                 'reddit-share', 'mastodon-share', 'lemmy-share', 'discord-share', 
-                'email-share', 'sms-share', 'pocket-save', 'instapaper-save', 'wallabag-save',
+                'email-share', 'sms-share', 'instapaper-save', 'wallabag-save',
                 'raindrop-save', 'feedbin-save'
             ],
             customShareButtons: [],
@@ -894,7 +887,6 @@
             document.getElementById('lemmy-share').href = `https://${settings.lemmyInstance}/create_post?title=${encodedText}&url=${encodedUrl}`;
             document.getElementById('email-share').href = `mailto:?subject=${encodedText}&body=${text}%20${url}`;
             document.getElementById('sms-share').href = `sms:?body=${encodedText}%20${encodedUrl}`;
-            document.getElementById('pocket-save').href = `https://getpocket.com/save?url=${encodedUrl}&title=${encodedText}`;
             document.getElementById('instapaper-save').href = `https://www.instapaper.com/hello2?url=${encodedUrl}&title=${encodedText}`;
             document.getElementById('wallabag-save').href = `https://${settings.wallabagInstance}/bookmarklet?url=${encodedUrl}`;
             document.getElementById('raindrop-save').href = `https://app.raindrop.io/add?link=${encodedUrl}&title=${encodedText}`;
@@ -1184,7 +1176,6 @@
                         localStorage.removeItem(key);
                     }
                 });
-                localStorage.removeItem('pocketWarningHidden');
                 localStorage.removeItem('couponHiddenUntil');
                 localStorage.removeItem('syncPromoHiddenUntil');
                 alert('All settings have been reset. The page will now reload.');
@@ -1207,18 +1198,6 @@
             const expirationTime = new Date().getTime() + twoWeeksInMs;
             localStorage.setItem(couponHiddenKey, expirationTime.toString());
             couponBlock.style.display = 'none';
-        });
-
-        // --- Pocket Warning Close Logic ---
-        const pocketWarningBlock = document.querySelector('.callout-warning');
-        const hidePocketWarningBtn = document.getElementById('hide-pocket-warning-btn');
-        const pocketWarningHiddenKey = 'pocketWarningHidden';
-        if (localStorage.getItem(pocketWarningHiddenKey)) {
-            pocketWarningBlock.style.display = 'none';
-        }
-        hidePocketWarningBtn.addEventListener('click', () => {
-            pocketWarningBlock.style.display = 'none';
-            localStorage.setItem(pocketWarningHiddenKey, 'true');
         });
 
         // --- Sync Promo Close Logic ---
