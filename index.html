@@ -191,7 +191,6 @@
         .instapaper { background-color: #1f1f1f; }
         .wallabag { background-color: #333; }
         .linkding { background-color: #4A5568; }
-        .readeck { background-color: #2C5282; }
         .raindrop { background-color: #3B4E70; }
         .feedbin { background-color: #000000; }
         .custom-share-btn { background-color: #57534e; }
@@ -458,7 +457,6 @@
             <a href="#" id="instapaper-save" class="action-item instapaper" target="_blank">Instapaper</a>
             <a href="#" id="wallabag-save" class="action-item wallabag" target="_blank">Wallabag</a>
             <a href="#" id="linkding-save" class="action-item linkding" target="_blank">Linkding</a>
-            <a href="#" id="readeck-save" class="action-item readeck" target="_blank">Readeck</a>
             <a href="#" id="raindrop-save" class="action-item raindrop" target="_blank">Raindrop.io</a>
             <a href="#" id="feedbin-save" class="action-item feedbin" target="_blank">Feedbin</a>
         </div>
@@ -492,10 +490,6 @@
                 <div class="form-group">
                     <label for="linkding-instance">Linkding Server</label>
                     <input type="text" id="linkding-instance" placeholder="linkding.cloudbreak.app">
-                </div>
-                <div class="form-group">
-                    <label for="readeck-instance">Readeck Server</label>
-                    <input type="text" id="readeck-instance" placeholder="readeck.cloudbreak.app">
                 </div>
 
                 <button type="submit" class="btn btn-primary" id="save-settings-btn">Save Settings</button>
@@ -727,12 +721,11 @@
             lemmyInstance: 'lemmy.world',
             wallabagInstance: 'wallabag.cloudbreak.app',
             linkdingInstance: 'linkding.cloudbreak.app',
-            readeckInstance: 'readeck.cloudbreak.app',
             visibleShareButtons: [
                 'facebook-share', 'twitter-share', 'bluesky-share', 'linkedin-share', 
                 'reddit-share', 'mastodon-share', 'lemmy-share', 'discord-share', 
                 'email-share', 'sms-share', 'instapaper-save', 'wallabag-save',
-                'linkding-save', 'readeck-save',
+                'linkding-save',
                 'raindrop-save', 'feedbin-save'
             ],
             customShareButtons: [],
@@ -750,7 +743,7 @@
         };
         
         const hasAnySavedSettings = () => {
-            const settingKeys = ['mastodonInstance', 'lemmyInstance', 'wallabagInstance', 'linkdingInstance', 'readeckInstance', 'visibleShareButtons', 'customShareButtons', 'quickShareContacts'];
+            const settingKeys = ['mastodonInstance', 'lemmyInstance', 'wallabagInstance', 'linkdingInstance', 'visibleShareButtons', 'customShareButtons', 'quickShareContacts'];
             return settingKeys.some(key => localStorage.getItem(key) !== null);
         };
 
@@ -759,7 +752,6 @@
             lemmyInstance: getSetting('lemmyInstance'),
             wallabagInstance: getSetting('wallabagInstance'),
             linkdingInstance: getSetting('linkdingInstance'),
-            readeckInstance: getSetting('readeckInstance'),
             visibleShareButtons: getSetting('visibleShareButtons'),
             customShareButtons: getSetting('customShareButtons'),
             quickShareContacts: getSetting('quickShareContacts')
@@ -907,7 +899,6 @@
             document.getElementById('instapaper-save').href = `https://www.instapaper.com/hello2?url=${encodedUrl}&title=${encodedText}`;
             document.getElementById('wallabag-save').href = `https://${settings.wallabagInstance}/bookmarklet?url=${encodedUrl}`;
             document.getElementById('linkding-save').href = `https://${settings.linkdingInstance}/bookmarks/new?url=${encodedUrl}&title=${encodedText}`;
-            document.getElementById('readeck-save').href = `https://${settings.readeckInstance}/bookmarks?url=${encodedUrl}`;
             document.getElementById('raindrop-save').href = `https://app.raindrop.io/add?link=${encodedUrl}&title=${encodedText}`;
             document.getElementById('feedbin-save').href = `https://feedbin.com/pages/new?url=${encodedUrl}`;
             document.querySelectorAll('.custom-share-btn').forEach(btn => {
@@ -959,13 +950,11 @@
             const lemmyInput = document.getElementById('lemmy-instance');
             const wallabagInput = document.getElementById('wallabag-instance');
             const linkdingInput = document.getElementById('linkding-instance');
-            const readeckInput = document.getElementById('readeck-instance');
 
             setSetting('mastodonInstance', mastodonInput.value.trim() || defaults.mastodonInstance);
             setSetting('lemmyInstance', lemmyInput.value.trim() || defaults.lemmyInstance);
             setSetting('wallabagInstance', wallabagInput.value.trim() || defaults.wallabagInstance);
             setSetting('linkdingInstance', linkdingInput.value.trim() || defaults.linkdingInstance);
-            setSetting('readeckInstance', readeckInput.value.trim() || defaults.readeckInstance);
 
             const visibleButtons = Array.from(document.querySelectorAll('.share-toggle:checked')).map(cb => cb.value);
             setSetting('visibleShareButtons', visibleButtons);
@@ -1157,7 +1146,6 @@
                 lemmyInstance: getSetting('lemmyInstance'),
                 wallabagInstance: getSetting('wallabagInstance'),
                 linkdingInstance: getSetting('linkdingInstance'),
-                readeckInstance: getSetting('readeckInstance'),
                 visibleShareButtons: getSetting('visibleShareButtons'),
                 customShareButtons: getSetting('customShareButtons'),
                 quickShareContacts: getSetting('quickShareContacts')
@@ -1178,7 +1166,7 @@
             reader.onload = (e) => {
                 try {
                     const importedSettings = JSON.parse(e.target.result);
-                    const requiredKeys = ['mastodonInstance', 'lemmyInstance', 'wallabagInstance', 'linkdingInstance', 'readeckInstance', 'visibleShareButtons', 'customShareButtons', 'quickShareContacts'];
+                    const requiredKeys = ['mastodonInstance', 'lemmyInstance', 'wallabagInstance', 'linkdingInstance', 'visibleShareButtons', 'customShareButtons', 'quickShareContacts'];
                     if (!requiredKeys.every(key => key in importedSettings)) throw new Error("File is missing required settings keys.");
                     requiredKeys.forEach(key => {
                         if(importedSettings[key] !== null && importedSettings[key] !== undefined) {
@@ -1267,7 +1255,6 @@
         document.getElementById('lemmy-instance').value = settings.lemmyInstance;
         document.getElementById('wallabag-instance').value = settings.wallabagInstance;
         document.getElementById('linkding-instance').value = settings.linkdingInstance;
-        document.getElementById('readeck-instance').value = settings.readeckInstance;
         updatePreview();
         renderShareVisibilityCheckboxes();
         renderCustomShareList();
