@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, add/ci-rspec ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.3.10'
+        bundler-cache: true
+
+    - name: Install Chromium dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          chromium-browser \
+          chromium-chromedriver \
+          libnss3 \
+          libatk-bridge2.0-0 \
+          libdrm2 \
+          libxkbcommon0 \
+          libxcomposite1 \
+          libxdamage1 \
+          libxrandr2 \
+          libgbm1 \
+          libasound2
+
+    - name: Run tests
+      run: bundle exec rspec
+      env:
+        CI: true
+
+    - name: Upload coverage
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: coverage
+        path: coverage/
+        retention-days: 7
